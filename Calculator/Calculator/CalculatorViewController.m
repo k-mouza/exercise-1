@@ -11,7 +11,6 @@
 
 @interface CalculatorViewController()
 @property (nonatomic) BOOL userIsInTheMiddleOfTypingaNumber;
-@property (nonatomic) BOOL ppressed;
 @property (nonatomic) int dot;
 @property (nonatomic , strong) CalculatorBrain *brain;
 @end
@@ -22,7 +21,6 @@
 @synthesize screen;
 @synthesize userIsInTheMiddleOfTypingaNumber;
 @synthesize dot;
-@synthesize ppressed;
 @synthesize brain = _brain;
 
 -(CalculatorBrain *)brain
@@ -46,23 +44,8 @@
     } else {
         self.display.text = digit;
         self.userIsInTheMiddleOfTypingaNumber=YES;
-        self.ppressed = NO;
     }
 }
-
-- (IBAction)p_pressed {
-    self.ppressed=YES;
-    [self.brain pushOperand:[self.display.text doubleValue]];
-    [self.brain pushOperand:M_PI];
-    self.screen.text = [self.screen.text stringByAppendingString:@" "];
-    self.screen.text = [self.screen.text stringByAppendingString:self.display.text];
-    self.screen.text = [self.screen.text stringByAppendingString:@" "];
-    self.display.text = [NSString stringWithFormat:@"%g" , M_PI];
-    self.screen.text = [self.screen.text stringByAppendingString:self.display.text];
-    self.userIsInTheMiddleOfTypingaNumber=NO;
-    self.dot = 0;
-}
-
 
 - (IBAction)c_pressed {
     self.screen.text = @"";
@@ -73,22 +56,19 @@
 
 
 - (IBAction)enterPressed {
-    if (!self.ppressed) {
-        [self.brain pushOperand:[self.display.text doubleValue]];
-        self.screen.text = [self.screen.text stringByAppendingString:@" "];
-        self.screen.text = [self.screen.text stringByAppendingString:self.display.text];
-    }
+    [self.brain pushOperand:[self.display.text doubleValue]];
+    self.screen.text = [self.screen.text stringByAppendingString:@" "];
+    self.screen.text = [self.screen.text stringByAppendingString:self.display.text];
     NSUInteger screen_length = [self.screen.text length];
     if (screen_length >= 20) self.screen.text = @"";
     self.userIsInTheMiddleOfTypingaNumber=NO;
-    self.ppressed=NO;
     self.dot = 0;
 }
 
 
 -(IBAction)operationPressed:(UIButton *)sender
 {
-    if ((self.userIsInTheMiddleOfTypingaNumber)||(self.ppressed)){
+    if (self.userIsInTheMiddleOfTypingaNumber){
         [self enterPressed];
     }
     NSString *operation = [sender currentTitle];
