@@ -65,6 +65,22 @@
     self.dot = 0;
 }
 
+- (IBAction)backspacePressed {
+    NSString *lastDig = [NSString stringWithFormat:@"%C",[self.display.text characterAtIndex:([self.display.text length]-1)]];
+    self.display.text = [self.display.text stringByReplacingCharactersInRange: [self.display.text rangeOfString:lastDig options:NSBackwardsSearch] withString:@""];
+    if ([self.display.text length]==0){
+        self.display.text=@"0";
+        self.userIsInTheMiddleOfTypingaNumber=NO;
+    }
+}
+
+- (IBAction)signPressed:(id)sender {
+    NSString *firstChar = [NSString stringWithFormat:@"%C",[self.display.text characterAtIndex:0]];
+    if([firstChar isEqualToString:@"-"])
+        self.display.text = [self.display.text stringByReplacingCharactersInRange: [self.display.text rangeOfString:@"-"] withString:@""];
+    else
+        self.display.text = [@"-" stringByAppendingString:self.display.text];
+}
 
 -(IBAction)operationPressed:(UIButton *)sender
 {
@@ -73,8 +89,9 @@
     }
     NSString *operation = [sender currentTitle];
     double result = [self.brain performOperation:operation];
-    self.screen.text = [self.screen.text stringByAppendingString:@" "];
     self.screen.text = [self.screen.text stringByAppendingString:operation];
+    self.screen.text = [self.screen.text stringByAppendingString:@" "];
+    self.screen.text = [self.screen.text stringByAppendingString:@"="];
     self.display.text = [NSString stringWithFormat:@"%g" , result];
 }
 
