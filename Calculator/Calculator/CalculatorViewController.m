@@ -56,7 +56,8 @@
 
 
 - (IBAction)enterPressed {
-    [self.brain pushOperand:[self.display.text doubleValue]];
+    if([self.display.text doubleValue]!=0) [self.brain pushOperand:[self.display.text doubleValue]];
+    else [self.brain pushVariable:self.display.text];
     self.screen.text = [self.screen.text stringByAppendingString:@" "];
     self.screen.text = [self.screen.text stringByAppendingString:self.display.text];
     NSUInteger screen_length = [self.screen.text length];
